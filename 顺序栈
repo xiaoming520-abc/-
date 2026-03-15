@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAXSIZE 200
+#define EXIT_FAILURE 1
+
+typedef struct stack
+{
+    int *base;
+    int *top;
+    int stacksize;
+}stack,*stackptr;
+
+stackptr Init()
+{
+    stackptr temp = (stackptr)malloc(sizeof(stack));
+    if(!temp) exit(EXIT_FAILURE);
+
+    temp->base = (int*)malloc(MAXSIZE*sizeof(int));
+    if(!temp->base) 
+    {
+        free(temp);
+        exit(EXIT_FAILURE);
+    }
+
+    temp->top =temp->base;
+    temp->stacksize = MAXSIZE;
+    return temp;
+}
+
+void push(stackptr temp,int e)
+{
+    if(temp->top - temp->base >= temp->stacksize) return;
+    *temp->top++ = e;
+}
+
+int pop(stackptr temp)
+{
+    int m;
+    if(temp->base == temp->top) return -1;//exit(EXIT_FAILURE);
+
+    m = *--temp->top;
+    return m;
+}
+
+int GetTop(stackptr temp)
+{
+    if(temp->base!=temp->top)
+    {
+        return *(temp->top-1);
+    }
+    return -1;
+}
+
+void Output(stackptr temp)
+{
+    int *m = temp->base;
+    if(m == temp->top)
+    {
+        printf("None element\n");
+        return;
+    }
+    while(m != temp->top)
+    {
+        printf("%d ",*m);
+        m ++;
+    }
+    printf("\n");
+}
+
+void Destroy(stackptr temp)
+{
+    if(temp)
+    {
+        free(temp->base);
+        free(temp);
+    }
+}
+
+void Hanshu_test_List()
+{
+    stackptr temp = Init();
+    push(temp,1);
+    push(temp,2);
+    push(temp,3);
+    push(temp,4);
+    push(temp,5);
+    push(temp,6);
+    push(temp,7);
+    Output(temp);
+    printf("%d\n",GetTop(temp));
+    printf("%d\n",pop(temp));
+    printf("%d\n",pop(temp));
+    Output(temp);
+    Destroy(temp);
+}
+
+int main(void)
+{
+    Hanshu_test_List();
+    return 0;
+}
